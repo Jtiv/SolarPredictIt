@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class MarketContractObject
+public class Contract
 {
-    private MarketContractObject _instance;
+    private Contract _instance;
 
     public string _shortName { get; private set; }
     public string _status { get; private set;}
     public string[] _buySellPrices { get; private set; }
 
-    public MarketContractObject(string Shortname, string Status, string[] BuySellPrices)
+    public Contract(string Shortname, string Status, string[] BuySellPrices)
     {
         _shortName = Shortname;
         _status = Status;
@@ -20,9 +20,9 @@ public class MarketContractObject
         _instance = this;
     }
 
-    public void AddTo(List<MarketContractObject> marketContractObjectsList)
+    public void AddTo(List<Contract> ContractList)
     {
-        marketContractObjectsList.Add(_instance);
+        ContractList.Add(_instance);
     }
 
     public void Destroy()

@@ -6,6 +6,7 @@ using TMPro;
 
 public class MarketHandler : MonoBehaviour
 {
+    
     private Timer timer;
     private float spacingVar;
     private float lineBreakVar;
@@ -22,18 +23,17 @@ public class MarketHandler : MonoBehaviour
     [SerializeField]
     private int[] _inputFieldArray;
 
-    public List<MarketDataObject> MarketsList { get; private set; }
+    public Dictionary<int, MarketData> MarketsList { get; private set; }
 
     private void Awake()
     {
-        timer = FindObjectOfType<Timer>();
+        MarketsList = new Dictionary<int, MarketData>();
 
+        timer = FindObjectOfType<Timer>();
         timer.OnTimerHitInterval += OnButtonOrSomething;
 
         UiCanvasTransform = UI_CanvasPanel.GetComponent<RectTransform>();
-
         spacingVar = UI_Contract.GetComponent<RectTransform>().rect.width * .52f;
-
         lineBreakVar = UiCanvasTransform.rect.width / spacingVar;
 
         // _inputFieldArray = FindObjectsOfType<TMP_InputField>();
@@ -41,32 +41,14 @@ public class MarketHandler : MonoBehaviour
     
     public void OnButtonOrSomething()
     {
-        //check if there is an existant list and if it has items -- Empty it's contents to refresh
-        if (MarketsList != null)
-        {
-            //empty the contents of the MarketsList
-            foreach (MarketDataObject mdo in MarketsList)
-            {
-                foreach  (MarketContractObject mco in mdo.marketContractsList)
-                {
-
-                    mco.Destroy();
-                    
-                }
-
-                //clear contract lists of each 
-                mdo.marketContractsList.Clear();
-
-            }
-
-            //then clear the MarketList
-            MarketsList = null;
-        }
+        ClearUIObjects();
         
-        MarketsList = new List<MarketDataObject>();
-
         foreach (int ID in _inputFieldArray)
         {
+            //spawn new MARKET_UI to house markets 
+
+
+
             ApiCaller apiCaller = new ApiCaller();
 
             StartCoroutine(apiCaller.CallPredictitAPI(ID, HandleMarketData));
@@ -74,9 +56,8 @@ public class MarketHandler : MonoBehaviour
             apiCaller.Destroy();
         }
 
-
-
-
+        //handle is being called before the coroutine can finish.. find a way to trigger handleUI when the coroutine is done
+        
     }
 
     //Handles Data from the Api Caller and Arranges it within its proper markets and contracts
@@ -93,7 +74,7 @@ public class MarketHandler : MonoBehaviour
         Debug.Log($"Name is {Name} + ID is {ID}");
 
         //create market object
-        MarketDataObject market = new MarketDataObject(ID, Name);
+        MarketData market = new MarketData(ID, Name);
 
         //Pull contracts from JSON Node
         JSONNode MarketContracts = MarketDataNode["contracts"];
@@ -114,40 +95,54 @@ public class MarketHandler : MonoBehaviour
                 MarketContracts[i]["lastClosePrice"]
             };
             
-            //...create a MarketContractObject to contain it
-            MarketContractObject marketContractObject = new MarketContractObject
+            //...create a <Contract> to contain it
+            Contract marketContractObject = new Contract
                 (   MarketContracts[i]["shortName"], 
                     MarketContracts[i]["status"], 
                     BuySellPrices );
             //...call the market function to add the contract to it (is this the best way to do this? Jurys still out)
             market.AddContractToMarket(marketContractObject);
         }
-        //now add the Market itself to a list of markets
-        MarketsList.Add(market);
+        
 
-        //now reorder the list of markets to keep the UI consistant <lowest ID to highest>
-        //UI is spawned based on timing of api call, meaning not always in the same order
+        //now add the Market itself to a DICTIONARY of markets
+        //adding ID as KEY so that calling the same market OVERRIDES instead of ADDs to DICTIONARY
+        MarketsList[market._ID] = market;
+
+        //Visualize the contents of the DICTIONARY
+        if (_inputFieldArray.Length <= MarketsList.Count)
+        {
+            HandleUI();
+        }
+
+    }
+
+    private void ClearUIObjects()
+    {
+        UIContract[] toDelete = FindObjectsOfType<UIContract>();
+        foreach (var thing in toDelete)
+        {
+            Destroy(thing);
+        }
+    }
+    
+
+    private void HandleUI()
+    {
 
         
 
-
-        //take in ID of market
-        //sort IDs
-        //return new list in new order
-
-
-        //
         int x = 0;
         int y = 0;
 
-         
-
-        foreach (MarketDataObject MarketData in MarketsList)
+        foreach (KeyValuePair<int, MarketData> entry in MarketsList)
         {
+            //spawn a market list UI object to house all of the contract UI objects
+            //...For now just create a new line effectively making a new row
             x = 0;
             y++;
-
-            foreach (MarketContractObject MarketContractData in MarketData.marketContractsList)
+            
+            foreach (Contract MarketContractData in entry.Value.ContractList)
             {
                 //instantiate UI object for contract
 
@@ -158,7 +153,6 @@ public class MarketHandler : MonoBehaviour
                 x++;
 
                 // (x > lineBreakVar){ x = 0; y++;}
-                    
 
                 if (MarketContractData._status == "Open")
                 {
@@ -171,47 +165,15 @@ public class MarketHandler : MonoBehaviour
                             $"Best Sell No Cost  > {MarketContractData._buySellPrices[4]}" +
                             $"Last Close Price   > {MarketContractData._buySellPrices[5]}");
                 }
-                
+
 
                 Debug.Log("______________________________________________________________");
             }
         }
-
-
-        //send alert to update all Contracts and Markets in UI
-
+        
     }
 
-    private List<MarketDataObject> SortList(List<MarketDataObject> input)
-    {
-        Debug.Log("head of list reads" + input[0]);
-        int c = input.Count;
-
-        for (int i = 0; i < c - 1; i++)
-        {
-            int j = i;
-            while (j > 0 && input[j - 1]._ID > input[j]._ID)
-            {
-                Swap(input[j], input[j - 1]);
-                j = j - 1;
-            }
-
-        }
-
-        Debug.Log("new head of list reads" + input[0]);
-
-        return input;
-
-    }
-
-
-    private void Swap(object a, object b)
-    {
-        var temp = a;
-        a = b;
-        b = temp;
-    }
-
+    
     //private void OnDestroy()
     //{
     //    timer.OnTimerHitInterval -= OnButtonOrSomething;

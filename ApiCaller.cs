@@ -58,7 +58,7 @@ public class ApiCaller : UnityEngine.Object
                 Debug.Log("not null?");
             }
 
-            Debug.Log("node made we thinks");
+            Debug.Log("node made me thinks");
             onComplete(MarketDataJSONNode);
         }
     }

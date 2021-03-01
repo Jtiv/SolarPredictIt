@@ -6,42 +6,35 @@ using UnityEngine.UI;
 
 public class UIContract : MonoBehaviour
 {   
-    private MarketContractObject marketContractObject;
+    private Contract contractObject;
     public TextMeshProUGUI _shortName;
     public Text[] _buySellPrices;
-
-    public void Update()
-    {
-        if (marketContractObject == null)
-        {
-            Destroy(this);
-            Debug.Log("destroyed");
-        }
-
-
-    }
-
-    public UIContract(MarketContractObject MarketContractObject)
+    
+    public UIContract(Contract MarketContractObject)
     {
         SetContract(MarketContractObject);
     }
 
-    public void SetContract(MarketContractObject Contract)
+    public void SetContract(Contract Contract)
     {
-        marketContractObject = Contract;
+        contractObject = Contract;
         RefreshUI();
     }
  
 
     public void RefreshUI()
     {
-        _shortName.text = marketContractObject._shortName;
+        _shortName.text = contractObject._shortName;
         //_status.text = marketContractObject._status;
 
-        for (int i = 0; i < marketContractObject._buySellPrices.Length; i++)
+        for (int i = 0; i < contractObject._buySellPrices.Length; i++)
         {
-            _buySellPrices[i].text = marketContractObject._buySellPrices[i];
+            _buySellPrices[i].text = contractObject._buySellPrices[i];
         }
     }
 
+    private void OnDestroy()
+    {
+        Debug.Log("urk gaa gablaah keehh bleeeh *coughs blood* im ded");
+    }
 }

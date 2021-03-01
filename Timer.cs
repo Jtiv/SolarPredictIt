@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class Timer : MonoBehaviour
 {
 
-    public static Timer Instance;
+    public static Timer Instance { get; private set;}
 
     [SerializeField] private float RefreshVariable;
     [SerializeField] private float elapsedTime;
@@ -26,7 +26,6 @@ public class Timer : MonoBehaviour
     }
 
     
-
     public void BeginTimer()
     {
         isGoing = true;
