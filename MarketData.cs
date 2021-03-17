@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct MarketData 
+public class MarketData 
 {
     public int _ID { get; private set; }
     public string _shortName { get; private set; }

@@ -6,6 +6,9 @@ using TMPro;
 
 public class MarketHandler : MonoBehaviour
 {
+    //singleton
+    public static MarketHandler instance;
+    
     
     private Timer timer;
     private float spacingVar;
@@ -17,16 +20,16 @@ public class MarketHandler : MonoBehaviour
 
     [SerializeField]
     private GameObject UI_Contract;
-
-    //[SerializeField] private TMP_InputField[] _inputFieldArray;
-
-    [SerializeField]
-    private int[] _inputFieldArray;
+    
+    public List<int> _inputFieldArray;
 
     public Dictionary<int, MarketData> MarketsList { get; private set; }
 
     private void Awake()
     {
+        //singleton
+        instance = this;
+
         MarketsList = new Dictionary<int, MarketData>();
 
         timer = FindObjectOfType<Timer>();
@@ -36,18 +39,17 @@ public class MarketHandler : MonoBehaviour
         spacingVar = UI_Contract.GetComponent<RectTransform>().rect.width * .52f;
         lineBreakVar = UiCanvasTransform.rect.width / spacingVar;
 
-        // _inputFieldArray = FindObjectsOfType<TMP_InputField>();
     }
     
     public void OnButtonOrSomething()
     {
         ClearUIObjects();
-        
+         
         foreach (int ID in _inputFieldArray)
         {
-            //spawn new MARKET_UI to house markets 
-
-
+            //vvv spawn new MARKET_UI to house markets 
+            
+            //^^^ spawn new MARKET_UI to house markets
 
             ApiCaller apiCaller = new ApiCaller();
 
@@ -55,9 +57,6 @@ public class MarketHandler : MonoBehaviour
 
             apiCaller.Destroy();
         }
-
-        //handle is being called before the coroutine can finish.. find a way to trigger handleUI when the coroutine is done
-        
     }
 
     //Handles Data from the Api Caller and Arranges it within its proper markets and contracts
@@ -66,7 +65,7 @@ public class MarketHandler : MonoBehaviour
         //checked if passed JSON Node exists
         Debug.Log(MarketDataNode);
         
-        //pull the name, and ID store dem badbois
+        //pull the name and ID, store dem badbois
         string Name = MarketDataNode["shortName"];
         int ID = MarketDataNode["id"];
 
@@ -110,14 +109,14 @@ public class MarketHandler : MonoBehaviour
         MarketsList[market._ID] = market;
 
         //Visualize the contents of the DICTIONARY
-        if (_inputFieldArray.Length <= MarketsList.Count)
+        if (_inputFieldArray.Count <= MarketsList.Count)
         {
             HandleUI();
         }
 
     }
 
-    private void ClearUIObjects()
+    public void ClearUIObjects()
     {
         UIContract[] toDelete = FindObjectsOfType<UIContract>();
         foreach (var thing in toDelete)
@@ -127,9 +126,8 @@ public class MarketHandler : MonoBehaviour
     }
     
 
-    private void HandleUI()
+    public void HandleUI()
     {
-
         
 
         int x = 0;

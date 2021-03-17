@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class Timer : MonoBehaviour
 {
 
-    public static Timer Instance { get; private set;}
+    public static Timer instance { get; private set;}
 
     [SerializeField] private float RefreshVariable;
     [SerializeField] private float elapsedTime;
@@ -20,7 +20,7 @@ public class Timer : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        instance = this;
         elapsedTime = 0;
         isGoing = false;
     }
