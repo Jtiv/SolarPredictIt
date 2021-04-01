@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using SimpleJSON;
 using TMPro;
 
@@ -8,23 +10,18 @@ public class MarketHandler : MonoBehaviour
 {
     //singleton
     public static MarketHandler instance;
-    
-    
+
+    //callbacks
+    public delegate void HandledCallback(Dictionary<int, MarketData> marketslist);
+    public event HandledCallback OnMarketHandled;
+
+    //functionality
     private Timer timer;
-    private float spacingVar;
-    private float lineBreakVar;
-
-    [SerializeField]
-    private GameObject UI_CanvasPanel;
-    private RectTransform UiCanvasTransform;
-
-    [SerializeField]
-    private GameObject UI_Contract;
-    
-    public List<int> _inputFieldArray;
-
+    public List<int> _inputFieldList;
     public Dictionary<int, MarketData> MarketsList { get; private set; }
 
+
+    
     private void Awake()
     {
         //singleton
@@ -34,27 +31,15 @@ public class MarketHandler : MonoBehaviour
 
         timer = FindObjectOfType<Timer>();
         timer.OnTimerHitInterval += OnButtonOrSomething;
-
-        UiCanvasTransform = UI_CanvasPanel.GetComponent<RectTransform>();
-        spacingVar = UI_Contract.GetComponent<RectTransform>().rect.width * .52f;
-        lineBreakVar = UiCanvasTransform.rect.width / spacingVar;
-
+        
     }
     
     public void OnButtonOrSomething()
     {
-        ClearUIObjects();
-         
-        foreach (int ID in _inputFieldArray)
+        foreach (int ID in _inputFieldList)
         {
-            //vvv spawn new MARKET_UI to house markets 
-            
-            //^^^ spawn new MARKET_UI to house markets
-
             ApiCaller apiCaller = new ApiCaller();
-
             StartCoroutine(apiCaller.CallPredictitAPI(ID, HandleMarketData));
-
             apiCaller.Destroy();
         }
     }
@@ -109,66 +94,11 @@ public class MarketHandler : MonoBehaviour
         MarketsList[market._ID] = market;
 
         //Visualize the contents of the DICTIONARY
-        if (_inputFieldArray.Count <= MarketsList.Count)
+        if (_inputFieldList.Count <= MarketsList.Count)
         {
-            HandleUI();
+            OnMarketHandled?.Invoke(MarketsList);
         }
 
-    }
-
-    public void ClearUIObjects()
-    {
-        UIContract[] toDelete = FindObjectsOfType<UIContract>();
-        foreach (var thing in toDelete)
-        {
-            Destroy(thing);
-        }
-    }
-    
-
-    public void HandleUI()
-    {
-        
-
-        int x = 0;
-        int y = 0;
-
-        foreach (KeyValuePair<int, MarketData> entry in MarketsList)
-        {
-            //spawn a market list UI object to house all of the contract UI objects
-            //...For now just create a new line effectively making a new row
-            x = 0;
-            y++;
-            
-            foreach (Contract MarketContractData in entry.Value.ContractList)
-            {
-                //instantiate UI object for contract
-
-                UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
-                uicontract.SetContract(MarketContractData);
-                RectTransform dataTransform = uicontract.GetComponent<RectTransform>();
-                dataTransform.anchoredPosition = new Vector2(x * spacingVar, y * -spacingVar);
-                x++;
-
-                // (x > lineBreakVar){ x = 0; y++;}
-
-                if (MarketContractData._status == "Open")
-                {
-                    Debug.Log($"{MarketContractData._shortName}" +
-                            $"{MarketContractData._status}" +
-                            $"Last Trader Price  > {MarketContractData._buySellPrices[0]}" +
-                            $"Best Buy Yes Cost  > {MarketContractData._buySellPrices[1]}" +
-                            $"Best Buy No Cost   > {MarketContractData._buySellPrices[2]}" +
-                            $"Best Sell Yes Cost > {MarketContractData._buySellPrices[3]}" +
-                            $"Best Sell No Cost  > {MarketContractData._buySellPrices[4]}" +
-                            $"Last Close Price   > {MarketContractData._buySellPrices[5]}");
-                }
-
-
-                Debug.Log("______________________________________________________________");
-            }
-        }
-        
     }
 
     

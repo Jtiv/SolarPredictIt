@@ -8,9 +8,9 @@ public class InputCommand
     [ConsoleCommand]
     public static void AddID (int ID)
     {
-        if (!MarketHandler.instance._inputFieldArray.Contains(ID))
+        if (!MarketHandler.instance._inputFieldList.Contains(ID))
         {
-            MarketHandler.instance._inputFieldArray.Add(ID);
+            MarketHandler.instance._inputFieldList.Add(ID);
             Debug.Log("added");
         }
         else
@@ -22,19 +22,19 @@ public class InputCommand
     [ConsoleCommand]
     public static void ClearIDs()
     {
-        MarketHandler.instance._inputFieldArray.Clear();
+        MarketHandler.instance._inputFieldList.Clear();
     }
 
     [ConsoleCommand]
     public static void ClearUI()
     {
-        MarketHandler.instance.ClearUIObjects();
+        UIHandler.instance.ClearUIObjects();
     }
 
     [ConsoleCommand]
     public static void SpawnUI()
     {
-        MarketHandler.instance.HandleUI();
+        UIHandler.instance.HandleUI(MarketHandler.instance.MarketsList);
     }
 
     [ConsoleCommand]
