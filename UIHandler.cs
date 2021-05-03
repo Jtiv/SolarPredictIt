@@ -86,14 +86,13 @@ public class UIHandler : MonoBehaviour
         UIContract[] toDelete = FindObjectsOfType<UIContract>();
         foreach (var thing in toDelete)
         {
-            
-            Destroy(thing);
+            Destroy(thing.gameObject);
         }
 
         OctahedronContract[] OctsToDelete = FindObjectsOfType<OctahedronContract>();
         foreach (var octItem in OctsToDelete)
         {
-            Destroy(octItem);
+            Destroy(octItem.gameObject);
         }
         
     }

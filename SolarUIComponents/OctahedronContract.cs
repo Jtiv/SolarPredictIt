@@ -149,4 +149,8 @@ public class OctahedronContract : MonoBehaviour
         return adjustments;
     }
 
+    private void OnDestroy()
+    {
+        Debug.Log("Oct Destroyed apparently");
+    }
 }
