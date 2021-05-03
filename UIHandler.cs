@@ -86,6 +86,7 @@ public class UIHandler : MonoBehaviour
         UIContract[] toDelete = FindObjectsOfType<UIContract>();
         foreach (var thing in toDelete)
         {
+            
             Destroy(thing);
         }
 
@@ -94,5 +95,6 @@ public class UIHandler : MonoBehaviour
         {
             Destroy(octItem);
         }
+        
     }
 }
