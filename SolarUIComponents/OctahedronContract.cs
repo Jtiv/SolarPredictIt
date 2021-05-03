@@ -46,6 +46,7 @@ public class OctahedronContract : MonoBehaviour
     
     public void BasicOctahedron()
     {
+        //set width and height here, but can be set from inspector if desired.
         W = .5f;
         H = 1.5f;
 
@@ -97,14 +98,14 @@ public class OctahedronContract : MonoBehaviour
         
     }
 
-    public void AdjustOctahedron(float[] adj)
+    public void AdjustOctahedron(float[] Adjustment)
     {
         mesh = GetComponent<MeshFilter>().mesh;
         mesh.Clear();
 
-        for (int i = 0; i < adj.Length; i++)
+        for (int i = 0; i < Adjustment.Length; i++)
         {
-            Vertices[i] *= adj[i];
+            Vertices[i] *= Adjustment[i];
         }
 
         UVs = new Vector2[Vertices.Length];

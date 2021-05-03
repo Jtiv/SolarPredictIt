@@ -6,7 +6,7 @@ public class UIHandler : MonoBehaviour
 {
     public static UIHandler instance;
 
-    private MarketHandler marketHandler;
+    //private MarketHandler marketHandler;
 
     private float spacingVar;
     private float lineBreakVar;
@@ -18,12 +18,12 @@ public class UIHandler : MonoBehaviour
     [SerializeField]
     private GameObject UI_Contract, Octahedron_Contract;
 
-    private void Awake()
+    private void Start()
     {
         instance = this;
 
-        marketHandler = FindObjectOfType<MarketHandler>();
-        marketHandler.OnMarketHandled += HandleUI;
+        //marketHandler = FindObjectOfType<MarketHandler>();
+        MarketHandler.instance.OnMarketHandled += HandleUI;
 
         UiCanvasTransform = UI_CanvasPanel.GetComponent<RectTransform>();
         spacingVar = UI_Contract.GetComponent<RectTransform>().rect.width * .52f;
@@ -46,32 +46,32 @@ public class UIHandler : MonoBehaviour
             x = .7f;
             y++;
 
-            foreach (Contract MarketContractData in entry.Value.ContractList)
+            foreach (KeyValuePair<int, Contract> MarketContractData in entry.Value.ContractList)
             {
                 //instantiate UI object for contract
 
                 UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
-                uicontract.SetContract(MarketContractData);
+                uicontract.SetContract(MarketContractData.Value);
                 RectTransform dataTransform = uicontract.GetComponent<RectTransform>();
                 dataTransform.anchoredPosition = new Vector2(x * spacingVar, y * -spacingVar);
 
                 //instantiate octohedron UI elements
                 OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, dataTransform).GetComponent<OctahedronContract>();
-                octahedronContract.SetContract(MarketContractData);
+                octahedronContract.SetContract(MarketContractData.Value);
                 x++;
 
                 // (x > lineBreakVar){ x = 0; y++;}
 
-                if (MarketContractData._status == "Open")
+                if (MarketContractData.Value._status == "Open")
                 {
-                    Debug.Log($"{MarketContractData._shortName}" +
-                            $"{MarketContractData._status}" +
-                            $"Last Trader Price  > {MarketContractData._buySellPrices[0]}" +
-                            $"Best Buy Yes Cost  > {MarketContractData._buySellPrices[1]}" +
-                            $"Best Buy No Cost   > {MarketContractData._buySellPrices[2]}" +
-                            $"Best Sell Yes Cost > {MarketContractData._buySellPrices[3]}" +
-                            $"Best Sell No Cost  > {MarketContractData._buySellPrices[4]}" +
-                            $"Last Close Price   > {MarketContractData._buySellPrices[5]}");
+                    Debug.Log($"{MarketContractData.Value._shortName}" +
+                            $"{MarketContractData.Value._status}" +
+                            $"Last Trader Price  > {MarketContractData.Value._buySellPrices[0]}" +
+                            $"Best Buy Yes Cost  > {MarketContractData.Value._buySellPrices[1]}" +
+                            $"Best Buy No Cost   > {MarketContractData.Value._buySellPrices[2]}" +
+                            $"Best Sell Yes Cost > {MarketContractData.Value._buySellPrices[3]}" +
+                            $"Best Sell No Cost  > {MarketContractData.Value._buySellPrices[4]}" +
+                            $"Last Close Price   > {MarketContractData.Value._buySellPrices[5]}");
                 }
 
 

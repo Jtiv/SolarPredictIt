@@ -23,7 +23,7 @@ public class MarketHandler : MonoBehaviour
 
     
     private void Awake()
-    {
+    { 
         //singleton
         instance = this;
 
@@ -83,7 +83,9 @@ public class MarketHandler : MonoBehaviour
             Contract marketContractObject = new Contract
                 (   MarketContracts[i]["shortName"], 
                     MarketContracts[i]["status"], 
-                    BuySellPrices );
+                    BuySellPrices, 
+                    MarketContracts[i]["id"]
+                    );
             //...call the market function to add the contract to it (is this the best way to do this? Jurys still out)
             market.AddContractToMarket(marketContractObject);
         }

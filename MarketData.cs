@@ -6,21 +6,21 @@ public class MarketData
 {
     public int _ID { get; private set; }
     public string _shortName { get; private set; }
-    public List<Contract> ContractList { get; private set; }
+    public Dictionary<int, Contract> ContractList { get; private set; }
 
     public MarketData(int ID, string Name)
     {
         _shortName = Name;
         _ID = ID;
-        ContractList = new List<Contract>();
+        ContractList = new Dictionary<int, Contract>();
     }
 
     public void AddContractToMarket(Contract Contract)
     {
-        ContractList.Add(Contract);
+        ContractList[Contract._ID] = Contract;
     }
 
-    public List<Contract> GetMarketContractList()
+    public Dictionary<int, Contract> GetMarketContractList()
     {
         return ContractList;
     }

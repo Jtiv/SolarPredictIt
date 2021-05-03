@@ -28,9 +28,13 @@ public class Timer : MonoBehaviour
     
     public void BeginTimer()
     {
-        isGoing = true;
-        elapsedTime = 0;
-        StartCoroutine(UpdateTimer());
+        if (isGoing == false)
+        {
+            isGoing = true;
+            elapsedTime = 0;
+            StartCoroutine(UpdateTimer());
+        }
+        
     }
 
     public void StopTimer()
@@ -57,5 +61,14 @@ public class Timer : MonoBehaviour
             yield return null;
         }
        
+    }
+
+    public float GetTimerActive()
+    {
+        return elapsedTime;
+    }
+    public float GetTimerRefresh()
+    {
+        return RefreshVariable;
     }
 }
