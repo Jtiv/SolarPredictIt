@@ -17,9 +17,11 @@ public class OctahedronContract : MonoBehaviour
     /// </summary>
 
 
+    private MeshCollider meshcollider;
     private Mesh mesh;
     private MeshFilter meshfilter;
     private MeshRenderer MR;
+    private Rigidbody rb;
     
     private Vector3[] Vertices; //6
     private Vector2[] UVs; //8
@@ -28,12 +30,29 @@ public class OctahedronContract : MonoBehaviour
     private float H;
 
     [SerializeField]
-    private float scaleFactor;
+    private float scaleFactor, planetGravResponseMod, degreesPerSecond, FloatingHeight;
+
+    private Transform centerGrav;
 
     public void OnEnable()
     {
         BasicOctahedron();
+        rb = gameObject.AddComponent<Rigidbody>();
+        rb.useGravity = false;
+        meshcollider = gameObject.AddComponent<MeshCollider>();
+        meshcollider.convex = true;
         Debug.Log("Octahedron Instantiated");
+    }
+
+    //remove on prod build
+    private void OnDestroy()
+    {
+        Debug.Log("Oct Destroyed apparently");
+    }
+
+    private void Update()
+    {
+        if (centerGrav) Orbit();
     }
 
     public void SetContract(Contract contract)
@@ -43,7 +62,12 @@ public class OctahedronContract : MonoBehaviour
         Debug.Log("Octahedron Adjusted");
     }
 
-    
+    public void SetGravPoint(Transform transform)
+    {
+        centerGrav = transform;
+    }
+
+
     public void BasicOctahedron()
     {
         //set width and height here, but can be set from inspector if desired.
@@ -148,9 +172,31 @@ public class OctahedronContract : MonoBehaviour
 
         return adjustments;
     }
-
-    private void OnDestroy()
+    
+    public void Orbit()
     {
-        Debug.Log("Oct Destroyed apparently");
+
+        Vector3 subjGravityDirection = (centerGrav.position - rb.position);
+        Debug.DrawRay(rb.position, subjGravityDirection, Color.red); // <--- delete later
+        float singleStep = planetGravResponseMod * Time.fixedDeltaTime;
+        Vector3 reAngle = Vector3.RotateTowards(rb.transform.forward, -subjGravityDirection, singleStep, 0.0f);
+        rb.transform.rotation = Quaternion.RotateTowards(rb.transform.rotation, Quaternion.Euler(reAngle), singleStep);
+
+        RaycastHit hitinfo;
+        if (Physics.Raycast(rb.position, subjGravityDirection, out hitinfo, 1500f, 1 << 8))
+        {
+            rb.transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.Self);
+
+            if (hitinfo.distance > FloatingHeight)
+            {
+                rb.AddForce(subjGravityDirection.normalized * (100 / 2) * Time.fixedDeltaTime);
+            }
+
+            else
+            {
+                rb.AddForce(-subjGravityDirection.normalized * (100 / 1) * Time.fixedDeltaTime);
+            }
+        }
+
     }
 }

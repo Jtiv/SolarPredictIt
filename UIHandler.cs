@@ -16,7 +16,7 @@ public class UIHandler : MonoBehaviour
     private RectTransform UiCanvasTransform;
 
     [SerializeField]
-    private GameObject UI_Contract, Octahedron_Contract;
+    private GameObject UI_Contract, Octahedron_Contract, PlanetMarket;
 
     private void Start()
     {
@@ -35,6 +35,7 @@ public class UIHandler : MonoBehaviour
     {
 
         ClearUIObjects();
+        Queue<Vector3> PlanetMarketPos = RandomishPlanetMarketTransform(1000, MarketsList.Count);
 
         float x;
         float y = 0f;
@@ -43,8 +44,11 @@ public class UIHandler : MonoBehaviour
         {
             //spawn a market list UI object to house all of the contract UI objects
             //...For now just create a new line effectively making a new row
-            x = .7f;
-            y++;
+            PlanetMarket planetMarket = Instantiate(PlanetMarket, PlanetMarketPos.Dequeue(), Quaternion.identity).GetComponent<PlanetMarket>();
+
+
+            x  = .7f;
+            y += .7f;
 
             foreach (KeyValuePair<int, Contract> MarketContractData in entry.Value.ContractList)
             {
@@ -58,6 +62,7 @@ public class UIHandler : MonoBehaviour
                 //instantiate octohedron UI elements
                 OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, dataTransform).GetComponent<OctahedronContract>();
                 octahedronContract.SetContract(MarketContractData.Value);
+                octahedronContract.SetGravPoint(planetMarket.gameObject.transform);
                 x++;
 
                 // (x > lineBreakVar){ x = 0; y++;}
@@ -94,6 +99,31 @@ public class UIHandler : MonoBehaviour
         {
             Destroy(octItem.gameObject);
         }
-        
+
+        PlanetMarket[] PlanetsToDestroy = FindObjectsOfType<PlanetMarket>();
+        foreach (var planet in PlanetsToDestroy)
+        {
+            Destroy(planet.gameObject);
+        }
+
+
     }
+
+    private Queue<Vector3> RandomishPlanetMarketTransform(int inputDistance, int NumOfMarkets)
+    {
+        Queue<Vector3> locations = new Queue<Vector3>();
+
+        int leap = inputDistance / NumOfMarkets++;
+        int land = (-inputDistance / 2) + leap;
+
+        for (int i = 1; i < NumOfMarkets; i++)
+        {
+            Vector3 position = new Vector3(land, Random.Range(-50f, 50f), Random.Range(175f, 350f));
+            locations.Enqueue(position);
+            land += leap;
+        }
+
+        return locations;
+    }
+
 }
