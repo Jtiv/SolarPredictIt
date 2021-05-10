@@ -53,14 +53,16 @@ public class UIHandler : MonoBehaviour
             foreach (KeyValuePair<int, Contract> MarketContractData in entry.Value.ContractList)
             {
                 //instantiate UI object for contract
-
+                
                 UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
+                uicontract.ToggleActive();
                 RectTransform uiContractTransform = uicontract.GetComponent<RectTransform>();
-                uiContractTransform.position = new Vector2(x * spacingVar, y * -spacingVar);
+                uiContractTransform.anchoredPosition = new Vector2(x * spacingVar, y * -spacingVar);
                 uicontract.SetContract(MarketContractData.Value);
+                Vector3 ParentPosition = uiContractTransform.position;
 
                 //instantiate octohedron UI elements
-                OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, uiContractTransform).GetComponent<OctahedronContract>();
+                OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, ParentPosition, Quaternion.identity).GetComponent<OctahedronContract>();
                 octahedronContract.SetContract(MarketContractData.Value);
                 octahedronContract.SetGravPoint(planetMarket.gameObject.transform);
 
@@ -128,4 +130,5 @@ public class UIHandler : MonoBehaviour
         return locations;
     }
 
+    
 }

@@ -47,7 +47,9 @@ public class OctahedronContract : MonoBehaviour
 
     public void OnMouseOver()
     {
-
+        rb.velocity *= .01f;
+        rb.rotation = Quaternion.identity;
+        
     }
     public void OnMouseExit()
     {
@@ -81,8 +83,8 @@ public class OctahedronContract : MonoBehaviour
     public void BasicOctahedron()
     {
         //set width and height here, but can be set from inspector if desired.
-        W = .5f;
-        H = 1.5f;
+        W = 2.5f;
+        H = 7.5f;
 
         
         meshfilter = gameObject.AddComponent<MeshFilter>();
@@ -154,6 +156,8 @@ public class OctahedronContract : MonoBehaviour
         mesh.triangles = Tris;
         mesh.uv = UVs;
         mesh.RecalculateNormals();
+        //question here -- the mesh is responsible for the MouseOver -- when to generate?
+        //meshcollider.sharedMesh = mesh;
     }
 
     private float[] Adjustment(string[] buysellprices)
@@ -164,7 +168,7 @@ public class OctahedronContract : MonoBehaviour
             //holy moly im a genius, this is so pretty
             //adjustments = is the buy/sell null? if so 0f if not parse the string to the value and scale it...
 
-            adjustments[i] = buysellprices[i] is null ? 0f : (float.Parse(buysellprices[i]) + scaleFactor) * 10;
+            adjustments[i] = buysellprices[i] is null ? 0f : (float.Parse(buysellprices[i]) + scaleFactor);
 
         }
         //rearrange to fit the vertices -- is this ugly?

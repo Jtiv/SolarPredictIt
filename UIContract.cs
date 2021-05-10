@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UIContract : MonoBehaviour
 {
-    private bool isActive = true;
+    private bool isActive;
     private Contract contractObject;
     public TextMeshProUGUI _shortName;
     public Text[] _buySellPrices;
@@ -56,6 +56,7 @@ public class UIContract : MonoBehaviour
         {
             isActive = false;
         }
+        
     }
 
     private void OnDestroy()
