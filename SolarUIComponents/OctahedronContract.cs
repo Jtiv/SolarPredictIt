@@ -16,7 +16,8 @@ public class OctahedronContract : MonoBehaviour
     /// 
     /// </summary>
 
-
+    private UIContract uiContract;
+    
     private MeshCollider meshcollider;
     private Mesh mesh;
     private MeshFilter meshfilter;
@@ -42,6 +43,15 @@ public class OctahedronContract : MonoBehaviour
         meshcollider = gameObject.AddComponent<MeshCollider>();
         meshcollider.convex = true;
         Debug.Log("Octahedron Instantiated");
+    }
+
+    public void OnMouseOver()
+    {
+
+    }
+    public void OnMouseExit()
+    {
+        
     }
 
     //remove on prod build
@@ -183,7 +193,7 @@ public class OctahedronContract : MonoBehaviour
         rb.transform.rotation = Quaternion.RotateTowards(rb.transform.rotation, Quaternion.Euler(reAngle), singleStep);
 
         RaycastHit hitinfo;
-        if (Physics.Raycast(rb.position, subjGravityDirection, out hitinfo, 1500f, 1 << 8))
+        if (Physics.Raycast(rb.position, subjGravityDirection, out hitinfo, 15000f, 1 << 8))
         {
             rb.transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.Self);
 
@@ -199,4 +209,8 @@ public class OctahedronContract : MonoBehaviour
         }
 
     }
+
+
+
+
 }

@@ -5,11 +5,24 @@ using TMPro;
 using UnityEngine.UI;
 
 public class UIContract : MonoBehaviour
-{   
+{
+    private bool isActive = true;
     private Contract contractObject;
     public TextMeshProUGUI _shortName;
     public Text[] _buySellPrices;
-    
+
+    private void Update()
+    {
+        if (isActive == true)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     public UIContract(Contract MarketContractObject)
     {
         SetContract(MarketContractObject);
@@ -20,7 +33,7 @@ public class UIContract : MonoBehaviour
         contractObject = Contract;
         RefreshUI();
     }
- 
+
 
     public void RefreshUI()
     {
@@ -30,6 +43,18 @@ public class UIContract : MonoBehaviour
         for (int i = 0; i < contractObject._buySellPrices.Length; i++)
         {
             _buySellPrices[i].text = contractObject._buySellPrices[i];
+        }
+    }
+
+    public void ToggleActive()
+    {
+        if (isActive == false)
+        {
+            isActive = true;
+        }
+        else
+        {
+            isActive = false;
         }
     }
 

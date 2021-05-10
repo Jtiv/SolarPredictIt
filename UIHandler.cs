@@ -12,7 +12,7 @@ public class UIHandler : MonoBehaviour
     private float lineBreakVar;
 
     [SerializeField]
-    private GameObject UI_CanvasPanel;
+    private GameObject UI_CanvasPanel, OctoContractSpawnPoint;
     private RectTransform UiCanvasTransform;
 
     [SerializeField]
@@ -55,16 +55,18 @@ public class UIHandler : MonoBehaviour
                 //instantiate UI object for contract
 
                 UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
+                RectTransform uiContractTransform = uicontract.GetComponent<RectTransform>();
+                uiContractTransform.position = new Vector2(x * spacingVar, y * -spacingVar);
                 uicontract.SetContract(MarketContractData.Value);
-                RectTransform dataTransform = uicontract.GetComponent<RectTransform>();
-                dataTransform.anchoredPosition = new Vector2(x * spacingVar, y * -spacingVar);
 
                 //instantiate octohedron UI elements
-                OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, dataTransform).GetComponent<OctahedronContract>();
+                OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, uiContractTransform).GetComponent<OctahedronContract>();
                 octahedronContract.SetContract(MarketContractData.Value);
                 octahedronContract.SetGravPoint(planetMarket.gameObject.transform);
-                x++;
 
+                uicontract.ToggleActive();
+                x++;
+                
                 // (x > lineBreakVar){ x = 0; y++;}
 
                 if (MarketContractData.Value._status == "Open")
