@@ -130,5 +130,14 @@ public class UIHandler : MonoBehaviour
         return locations;
     }
 
+    public void SpawnSingleUIContract(Contract Contract)
+    {
+        UIContract uiContract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
+        uiContract.SetContract(Contract);
+        RectTransform uiContractTransform = uiContract.GetComponent<RectTransform>();
+        uiContractTransform.anchoredPosition = new Vector2(.7f * spacingVar, 2.7f * -spacingVar);
+        uiContract.ToggleActive();
+        
+    }
     
 }

@@ -16,7 +16,7 @@ public class OctahedronContract : MonoBehaviour
     /// 
     /// </summary>
 
-    private UIContract uiContract;
+    private Contract _Contract;
     
     private MeshCollider meshcollider;
     private Mesh mesh;
@@ -45,16 +45,19 @@ public class OctahedronContract : MonoBehaviour
         Debug.Log("Octahedron Instantiated");
     }
 
+    public void OnMouseEnter()
+    {
+        UIHandler.instance.SpawnSingleUIContract(_Contract);
+    }
+
     public void OnMouseOver()
     {
         rb.velocity *= .01f;
         rb.rotation = Quaternion.identity;
-        
+        //slow time? Time.timescale = .2? Reset on OnMouseExit
     }
-    public void OnMouseExit()
-    {
-        
-    }
+
+    //OnMouseExit could clear the UI but actually keeping it allows viewing the contract without halting -- take out but keep note
 
     //remove on prod build
     private void OnDestroy()
@@ -69,6 +72,7 @@ public class OctahedronContract : MonoBehaviour
 
     public void SetContract(Contract contract)
     {
+        _Contract = contract;
         scaleFactor = 1f;
         AdjustOctahedron(Adjustment(contract._buySellPrices));
         Debug.Log("Octahedron Adjusted");

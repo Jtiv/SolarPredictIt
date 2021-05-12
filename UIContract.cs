@@ -15,6 +15,7 @@ public class UIContract : MonoBehaviour
     {
         if (isActive == true)
         {
+            //scale the ui elements -- test the drawcalls
             gameObject.SetActive(true);
         }
         else
@@ -23,6 +24,7 @@ public class UIContract : MonoBehaviour
         }
     }
 
+    //useless constructor? lets delete on prod
     public UIContract(Contract MarketContractObject)
     {
         SetContract(MarketContractObject);
