@@ -45,6 +45,7 @@ public class UIHandler : MonoBehaviour
             //spawn a market list UI object to house all of the contract UI objects
             //...For now just create a new line effectively making a new row
             PlanetMarket planetMarket = Instantiate(PlanetMarket, PlanetMarketPos.Dequeue(), Quaternion.identity).GetComponent<PlanetMarket>();
+            planetMarket.SetMarketData(entry.Value);
 
 
             x  = .7f;
