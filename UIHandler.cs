@@ -54,12 +54,14 @@ public class UIHandler : MonoBehaviour
             foreach (KeyValuePair<int, Contract> MarketContractData in entry.Value.ContractList)
             {
                 //instantiate UI object for contract
-                
-                UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
-                uicontract.ToggleActive();
-                RectTransform uiContractTransform = uicontract.GetComponent<RectTransform>();
+
+                //UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
+                //uicontract.ToggleActive();
+                //Monobehaviors and Components... this needs to be instantiated with gameobject of sorts then can be accessed...
+                RectTransform uiContractTransform = new GameObject().AddComponent<RectTransform>();
+                uiContractTransform.SetParent(UI_CanvasPanel.transform);
                 uiContractTransform.anchoredPosition = new Vector2(x * spacingVar, y * -spacingVar);
-                uicontract.SetContract(MarketContractData.Value);
+                //uicontract.SetContract(MarketContractData.Value);
                 Vector3 ParentPosition = uiContractTransform.position;
 
                 //instantiate octohedron UI elements
@@ -67,7 +69,7 @@ public class UIHandler : MonoBehaviour
                 octahedronContract.SetContract(MarketContractData.Value);
                 octahedronContract.SetGravPoint(planetMarket.gameObject.transform);
 
-                uicontract.ToggleActive();
+                //uicontract.ToggleActive();
                 x++;
                 
                 // (x > lineBreakVar){ x = 0; y++;}
