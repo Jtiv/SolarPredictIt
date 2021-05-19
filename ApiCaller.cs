@@ -16,8 +16,6 @@ public class ApiCaller : UnityEngine.Object
 
     public ApiCaller()
     {
-        Debug.Log("created");
-
         _instance = this;
     }
    
@@ -31,34 +29,22 @@ public class ApiCaller : UnityEngine.Object
         {
 
             PiApiRequest.downloadHandler = new DownloadHandlerBuffer();
-            Debug.Log($"making a request at{url}");
-
 
             yield return PiApiRequest.SendWebRequest();
-            Debug.Log("Request Sent and Returned");
-
-
+            
             if (PiApiRequest.isNetworkError || PiApiRequest.isHttpError)
             {
                 Debug.LogError(PiApiRequest.error);
                 yield break;
             }
-
-            Debug.Log(PiApiRequest.downloadHandler.text);
-
+            
             JSONNode MarketDataJSONNode = JSON.Parse(PiApiRequest.downloadHandler.text);
 
             if (MarketDataJSONNode.IsNull)
             {
-                Debug.Log("shits null");
                 yield break;
             }
-            else
-            {
-                Debug.Log("not null?");
-            }
 
-            Debug.Log("node made me thinks");
             onComplete(MarketDataJSONNode);
         }
     }

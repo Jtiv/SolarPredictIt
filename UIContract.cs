@@ -15,19 +15,12 @@ public class UIContract : MonoBehaviour
     {
         if (isActive == true)
         {
-            //scale the ui elements -- test the drawcalls
             gameObject.SetActive(true);
         }
         else
         {
             gameObject.SetActive(false);
         }
-    }
-
-    //useless constructor? lets delete on prod
-    public UIContract(Contract MarketContractObject)
-    {
-        SetContract(MarketContractObject);
     }
 
     public void SetContract(Contract Contract)
@@ -40,7 +33,6 @@ public class UIContract : MonoBehaviour
     public void RefreshUI()
     {
         _shortName.text = contractObject._shortName;
-        //_status.text = marketContractObject._status;
 
         for (int i = 0; i < contractObject._buySellPrices.Length; i++)
         {
@@ -61,8 +53,4 @@ public class UIContract : MonoBehaviour
         
     }
 
-    private void OnDestroy()
-    {
-        Debug.Log("urk gaa gablaah keehh bleeeh *coughs blood* im ded");
-    }
 }

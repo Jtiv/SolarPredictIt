@@ -6,8 +6,6 @@ public class UIHandler : MonoBehaviour
 {
     public static UIHandler instance;
 
-    //private MarketHandler marketHandler;
-
     private float spacingVar;
     private float lineBreakVar;
 
@@ -21,8 +19,6 @@ public class UIHandler : MonoBehaviour
     private void Start()
     {
         instance = this;
-
-        //marketHandler = FindObjectOfType<MarketHandler>();
         MarketHandler.instance.OnMarketHandled += HandleUI;
 
         UiCanvasTransform = UI_CanvasPanel.GetComponent<RectTransform>();
@@ -42,8 +38,7 @@ public class UIHandler : MonoBehaviour
 
         foreach (KeyValuePair<int, MarketData> entry in MarketsList)
         {
-            //spawn a market list UI object to house all of the contract UI objects
-            //...For now just create a new line effectively making a new row
+            //spawn a marketList UI object to house all of the contract UI objects
             PlanetMarket planetMarket = Instantiate(PlanetMarket, PlanetMarketPos.Dequeue(), Quaternion.identity).GetComponent<PlanetMarket>();
             planetMarket.SetMarketData(entry.Value);
 
@@ -54,40 +49,18 @@ public class UIHandler : MonoBehaviour
             foreach (KeyValuePair<int, Contract> MarketContractData in entry.Value.ContractList)
             {
                 //instantiate UI object for contract
-
-                //UIContract uicontract = Instantiate(UI_Contract, UI_CanvasPanel.transform).GetComponent<UIContract>();
-                //uicontract.ToggleActive();
                 //Monobehaviors and Components... this needs to be instantiated with gameobject of sorts then can be accessed...
+
                 RectTransform uiContractTransform = new GameObject().AddComponent<RectTransform>();
                 uiContractTransform.SetParent(UI_CanvasPanel.transform);
                 uiContractTransform.anchoredPosition = new Vector2(x * spacingVar, y * -spacingVar);
-                //uicontract.SetContract(MarketContractData.Value);
                 Vector3 ParentPosition = uiContractTransform.position;
 
                 //instantiate octohedron UI elements
                 OctahedronContract octahedronContract = Instantiate(Octahedron_Contract, ParentPosition, Quaternion.identity).GetComponent<OctahedronContract>();
                 octahedronContract.SetContract(MarketContractData.Value);
                 octahedronContract.SetGravPoint(planetMarket.gameObject.transform);
-
-                //uicontract.ToggleActive();
                 x++;
-                
-                // (x > lineBreakVar){ x = 0; y++;}
-
-                if (MarketContractData.Value._status == "Open")
-                {
-                    Debug.Log($"{MarketContractData.Value._shortName}" +
-                            $"{MarketContractData.Value._status}" +
-                            $"Last Trader Price  > {MarketContractData.Value._buySellPrices[0]}" +
-                            $"Best Buy Yes Cost  > {MarketContractData.Value._buySellPrices[1]}" +
-                            $"Best Buy No Cost   > {MarketContractData.Value._buySellPrices[2]}" +
-                            $"Best Sell Yes Cost > {MarketContractData.Value._buySellPrices[3]}" +
-                            $"Best Sell No Cost  > {MarketContractData.Value._buySellPrices[4]}" +
-                            $"Last Close Price   > {MarketContractData.Value._buySellPrices[5]}");
-                }
-
-
-                Debug.Log("______________________________________________________________");
             }
         }
 

@@ -11,7 +11,6 @@ public class InputCommand
         if (!MarketHandler.instance._inputFieldList.Contains(ID))
         {
             MarketHandler.instance._inputFieldList.Add(ID);
-            Debug.Log("added");
         }
         else
         {

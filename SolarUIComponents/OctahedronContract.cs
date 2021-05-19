@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class OctahedronContract : MonoBehaviour
 {
-    /// <summary>
-    /// 
+ 
     ///     Floaty double-pyramid whos dimensions reflect the state of the contract
     ///     
     ///     Contract has 6 pts of data (best buy/sell no, best buy/sell yes, last trade, highest trade)
@@ -13,8 +12,7 @@ public class OctahedronContract : MonoBehaviour
     ///     
     ///     each vertex will reflect one of these points and scale its position from the center
     ///     relative to the deviation from the max of these entities.
-    /// 
-    /// </summary>
+
 
     private Contract _Contract;
     
@@ -54,15 +52,6 @@ public class OctahedronContract : MonoBehaviour
     {
         rb.velocity *= .01f;
         rb.rotation = Quaternion.identity;
-        //slow time? Time.timescale = .2? Reset on OnMouseExit
-    }
-
-    //OnMouseExit could clear the UI but actually keeping it allows viewing the contract without halting -- take out but keep note
-
-    //remove on prod build
-    private void OnDestroy()
-    {
-        Debug.Log("Oct Destroyed apparently");
     }
 
     private void Update()
@@ -160,22 +149,19 @@ public class OctahedronContract : MonoBehaviour
         mesh.triangles = Tris;
         mesh.uv = UVs;
         mesh.RecalculateNormals();
-        //question here -- the mesh is responsible for the MouseOver -- when to generate?
-        //meshcollider.sharedMesh = mesh;
+        
     }
 
     private float[] Adjustment(string[] buysellprices)
     {
         float[] adjustments = new float[6];
         for (int i = 0; i < buysellprices.Length; i++)
-        {
-            //holy moly im a genius, this is so pretty
+        {    
             //adjustments = is the buy/sell null? if so 0f if not parse the string to the value and scale it...
-
             adjustments[i] = buysellprices[i] is null ? 0f : (float.Parse(buysellprices[i]) + scaleFactor);
-
         }
-        //rearrange to fit the vertices -- is this ugly?
+
+        //rearrange to fit the vertices
 
         adjustments = new float[]
         {
@@ -186,8 +172,7 @@ public class OctahedronContract : MonoBehaviour
             adjustments[1],
             adjustments[2],
         };
-
-
+        
         return adjustments;
     }
     
@@ -195,7 +180,6 @@ public class OctahedronContract : MonoBehaviour
     {
 
         Vector3 subjGravityDirection = (centerGrav.position - rb.position);
-        Debug.DrawRay(rb.position, subjGravityDirection, Color.red); // <--- delete later
         float singleStep = planetGravResponseMod * Time.fixedDeltaTime;
         Vector3 reAngle = Vector3.RotateTowards(rb.transform.forward, -subjGravityDirection, singleStep, 0.0f);
         rb.transform.rotation = Quaternion.RotateTowards(rb.transform.rotation, Quaternion.Euler(reAngle), singleStep);
@@ -215,10 +199,5 @@ public class OctahedronContract : MonoBehaviour
                 rb.AddForce(-subjGravityDirection.normalized * (100 / 1) * Time.fixedDeltaTime);
             }
         }
-
     }
-
-
-
-
 }

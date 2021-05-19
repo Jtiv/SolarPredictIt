@@ -48,14 +48,12 @@ public class MarketHandler : MonoBehaviour
     private void HandleMarketData(JSONNode MarketDataNode)
     {
         //checked if passed JSON Node exists
-        Debug.Log(MarketDataNode);
         
         //pull the name and ID, store dem badbois
         string Name = MarketDataNode["shortName"];
         int ID = MarketDataNode["id"];
 
         //Write names to console
-        Debug.Log($"Name is {Name} + ID is {ID}");
 
         //create market object
         MarketData market = new MarketData(ID, Name);
@@ -64,7 +62,6 @@ public class MarketHandler : MonoBehaviour
         JSONNode MarketContracts = MarketDataNode["contracts"];
 
         //Output to Console
-        Debug.Log($"contract list made {MarketContracts.Count}");
         
         //As many times as there are contracts in MarketContracts...
         for (int i = 0; i < MarketContracts.Count; i++)
@@ -103,11 +100,8 @@ public class MarketHandler : MonoBehaviour
 
     }
 
-    
-    //private void OnDestroy()
-    //{
-    //    timer.OnTimerHitInterval -= OnButtonOrSomething;
-    //}
-
-
+    private void OnDestroy()
+    {
+        timer.OnTimerHitInterval -= OnButtonOrSomething;
+    }
 }
