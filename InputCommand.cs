@@ -49,11 +49,14 @@ public class InputCommand
     }
 
     [ConsoleCommand]
-    public static void BeginTimer()
+    public static void StartTimer()
     {
         Timer.instance.BeginTimer();
     }
 
-   
-
+    [ConsoleCommand]
+    public static void Quit()
+    {
+        Application.Quit();
+    }
 }

@@ -18,7 +18,7 @@ public class PlanetMarket : MonoBehaviour
     {
         MarketData = md;
         TextMesh.text = MarketData._shortName;
-        Cam = Camera.main.transform;
+        Cam = Camera.main.transform; 
     }
 
     private void LateUpdate()

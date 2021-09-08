@@ -51,7 +51,8 @@ public class OctahedronContract : MonoBehaviour
     public void OnMouseOver()
     {
         rb.velocity *= .01f;
-        rb.rotation = Quaternion.identity;
+
+        rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.LookRotation(Vector3.zero, rb.transform.up), Time.deltaTime * 2f);
     }
 
     private void Update()
